@@ -27,10 +27,17 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       serviceAccountName: {{ include "crate-operator.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          envFrom:
+            - configMapRef:
+                name: {{ include "crate-operator.fullname" . }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
           env:
             {{- range $name, $value := .Values.envFromSecret }}
             - name: {{ $name }}
@@ -38,10 +45,6 @@ spec:
                 secretKeyRef:
                   name: {{ $value.name }}
                   key: {{ $value.key }}
-            {{- end }}
-            {{- range $name, $value := .Values.env }}
-            - name: {{ $name }}
-              value: "{{ $value }}"
             {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
