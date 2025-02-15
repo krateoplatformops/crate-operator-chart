@@ -1,0 +1,13 @@
+apiVersion: v2
+appVersion: 2.43.1
+dependencies:
+- condition: crate-operator-crds.enabled
+  name: crate-operator-crds
+  repository: file://../crate-operator-crds
+  version: 2.43.1
+description: Crate Operator - Helm chart for installing and upgrading Crate Operator.
+maintainers:
+- name: Crate.io
+name: crate-operator
+type: application
+version: 2.43.1
